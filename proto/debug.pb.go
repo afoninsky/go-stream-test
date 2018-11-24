@@ -24,7 +24,7 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type Item struct {
-	Item                 string   `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty"`
+	Item                 string   `protobuf:"bytes,1,opt,name=item" json:"item,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -73,9 +73,8 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// DebugClient is the client API for Debug service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+// Client API for Debug service
+
 type DebugClient interface {
 	Echo(ctx context.Context, in *Item, opts ...grpc.CallOption) (Debug_EchoClient, error)
 	Silence(ctx context.Context, in *Item, opts ...grpc.CallOption) (Debug_SilenceClient, error)
@@ -90,7 +89,7 @@ func NewDebugClient(cc *grpc.ClientConn) DebugClient {
 }
 
 func (c *debugClient) Echo(ctx context.Context, in *Item, opts ...grpc.CallOption) (Debug_EchoClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_Debug_serviceDesc.Streams[0], "/proto.Debug/Echo", opts...)
+	stream, err := grpc.NewClientStream(ctx, &_Debug_serviceDesc.Streams[0], c.cc, "/proto.Debug/Echo", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +121,7 @@ func (x *debugEchoClient) Recv() (*Item, error) {
 }
 
 func (c *debugClient) Silence(ctx context.Context, in *Item, opts ...grpc.CallOption) (Debug_SilenceClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_Debug_serviceDesc.Streams[1], "/proto.Debug/Silence", opts...)
+	stream, err := grpc.NewClientStream(ctx, &_Debug_serviceDesc.Streams[1], c.cc, "/proto.Debug/Silence", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -153,7 +152,8 @@ func (x *debugSilenceClient) Recv() (*Item, error) {
 	return m, nil
 }
 
-// DebugServer is the server API for Debug service.
+// Server API for Debug service
+
 type DebugServer interface {
 	Echo(*Item, Debug_EchoServer) error
 	Silence(*Item, Debug_SilenceServer) error
