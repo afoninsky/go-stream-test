@@ -1,0 +1,12 @@
+
+syntax = "proto3";
+package proto;
+
+service Debug {
+    rpc Echo(Item) returns (stream Item) {}
+    rpc Silence(Item) returns (stream Item) {}
+}
+
+message Item {
+    string item = 1;
+}
