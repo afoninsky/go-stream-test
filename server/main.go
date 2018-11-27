@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/keepalive"
 	"google.golang.org/grpc/reflection"
 
 	pb "../proto"
@@ -40,15 +39,16 @@ func (s *server) Silence(in *pb.Item, out pb.Debug_SilenceServer) error {
 }
 
 func main() {
-	lis, err := net.Listen("tcp", "localhost:50051")
+	lis, err := net.Listen("tcp", "0.0.0.0:50051")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	grpcServer := grpc.NewServer(grpc.KeepaliveParams(
-		keepalive.ServerParameters{
-			MaxConnectionAgeGrace: (time.Duration(5) * time.Second),
-		},
-	))
+	// grpcServer := grpc.NewServer(grpc.KeepaliveParams(
+	// 	keepalive.ServerParameters{
+	// 		MaxConnectionAgeGrace: (time.Duration(5) * time.Second),
+	// 	},
+	// ))
+	grpcServer := grpc.NewServer()
 	pb.RegisterDebugServer(grpcServer, &server{})
 	reflection.Register(grpcServer)
 

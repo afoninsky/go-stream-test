@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: grpc-debug
+    version: "1.1.1"
+  name: grpc-debug
+  namespace: debug
+spec:
+  selector:
+    matchLabels:
+      app: grpc-debug
+  template:
+    metadata:
+      labels:
+        app: grpc-debug
+    spec:
+      containers:
+      - name: service
+        image: gcr.io/peak-orbit-214114/sl-grpc-proxy:grpc-debug
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 50051
+          name: grpc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: grpc-debug
+  name: grpc-debug
+  namespace: debug
+spec:
+  ports:
+  - name: grpc
+    port: 50051
+  selector:
+    app: grpc-debug
+  type: LoadBalancer

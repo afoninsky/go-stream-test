@@ -16,8 +16,9 @@ time grpcurl \
 ```
 
 ```
-time grpcurl \
+time GODEBUG=http2debug=2 grpcurl \
     -d '{ "item": "silence" }' \
+    -keepalive-time 3 \
     grpc.internal.streamlayer.io:443 \
     proto.Debug/Silence
 ```

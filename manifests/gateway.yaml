@@ -1,0 +1,38 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: grpc-debug
+  namespace: debug
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - grpc.debug.streamlayer.io
+    port:
+      number: 31400
+      name: grpc
+      protocol: https
+    tls:
+      mode: SIMPLE
+      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+      privateKey: /etc/istio/ingressgateway-certs/tls.key
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: grpc
+  namespace: debug
+spec:
+  gateways:
+  - grpc-debug
+  hosts:
+  - grpc.debug.streamlayer.io
+  http:
+  - match:
+    - port: 31400
+    route:
+    - destination:
+        host: grpc-debug
+        port:
+          number: 50051
