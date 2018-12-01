@@ -8,15 +8,21 @@ spec:
     istio: ingressgateway
   servers:
   - hosts:
-    - grpc.debug.streamlayer.io
+    - grpc.testing.streamlayer.io
     port:
       number: 31400
       name: grpc
+      protocol: http
+  - hosts:
+    - grpc.testing.streamlayer.io
+    port:
+      number: 443
+      name: grpc-tls
       protocol: https
     tls:
       mode: SIMPLE
-      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
-      privateKey: /etc/istio/ingressgateway-certs/tls.key
+      serverCertificate: /etc/istio/ingressgateway-certs/grpc.testing.streamlayer.io.crt
+      privateKey: /etc/istio/ingressgateway-certs/grpc.testing.streamlayer.io.key
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -27,10 +33,17 @@ spec:
   gateways:
   - grpc-debug
   hosts:
-  - grpc.debug.streamlayer.io
+  - grpc.testing.streamlayer.io
   http:
   - match:
     - port: 31400
+    route:
+    - destination:
+        host: grpc-debug
+        port:
+          number: 50051
+  - match:
+    - port: 443
     route:
     - destination:
         host: grpc-debug

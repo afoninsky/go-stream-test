@@ -9,10 +9,26 @@ kubectl apply -f kubernetes
 
 
 ```
-time grpcurl \
-    -d '{ "item": "echo" }' \
-    grpc.internal.streamlayer.io:443 \
-    proto.Debug/Echo
+# debug
+grpcurl \
+  -d '{ "item": "echo" }' \
+  -plaintext \
+  35.227.27.52:50051 \
+  proto.Debug/Echo
+
+# default
+grpcurl \
+  -d '{ "item": "echo" }' \
+  -plaintext \
+  35.227.22.162:50051 \
+  proto.Debug/Echo
+
+# istio plain
+grpcurl \
+  -d '{ "item": "echo" }' \
+  -plaintext \
+  grpc.testing.streamlayer.io:31400 \
+  proto.Debug/Echo
 ```
 
 ```

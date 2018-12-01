@@ -1,0 +1,18 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: grpc.testing.streamlayer.io
+  namespace: debug
+spec:
+  secretName: grpc.testing.streamlayer.io
+  dnsNames:
+  - grpc.testing.streamlayer.io
+  acme:
+    config:
+    - dns01:
+        provider: cloudflare
+      domains:
+      - grpc.testing.streamlayer.io
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
