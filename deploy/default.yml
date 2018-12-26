@@ -1,0 +1,23 @@
+# helm upgrade grpc-debug makeomatic/microfleet --install  -f default.yml
+# grpcurl -plaintext test.staging.streamlayer.io:80 list
+# grpcurl test.staging.streamlayer.io:443 list
+name: grpc-debug
+replicaCount: 1
+image:
+  repository: gcr.io/peak-orbit-214114/sl-grpc-proxy
+  tag: grpc-debug
+service:
+  ports:
+    - name: grpc
+      port: 50051
+gateway:
+  host: test.staging.streamlayer.io
+  httpsRedirect: true
+  createCertificate: true
+  ports:
+    - name: grpc
+      port: 80
+      protocol: http
+    - name: grpc-tls
+      port: 443
+      protocol: https
