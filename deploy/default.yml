@@ -12,8 +12,6 @@ service:
       port: 50051
 gateway:
   host: test.staging.streamlayer.io
-  httpsRedirect: true
-  createCertificate: true
   ports:
     - name: grpc
       port: 80
